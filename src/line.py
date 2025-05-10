@@ -7,7 +7,7 @@ class Line():
         self.b = b
 
 
-    def draw(self, canvas, fill_color):
+    def draw(self, canvas, fill_color = "black"):
         canvas.create_line(
             self.a.x, self.a.y,
             self.b.x, self.b.y,
