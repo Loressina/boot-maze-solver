@@ -11,7 +11,7 @@ class Wall(Enum):
 
 
 class Cell():
-    def __init__(self, x1, y1, x2, y2, window):
+    def __init__(self, x1, y1, x2, y2, window = None):
         self.__x1 = x1
         self.__y1 = y1
         self.__x2 = x2
@@ -25,20 +25,22 @@ class Cell():
         
 
     def draw(self):
-        if self.has_left_wall:
-            self.__win.draw_line(self.get_wall(Wall.LEFT))
-        if self.has_right_wall:
-            self.__win.draw_line(self.get_wall(Wall.RIGHT))
-        if self.has_top_wall:
-            self.__win.draw_line(self.get_wall(Wall.TOP))
-        if self.has_bottom_wall:
-            self.__win.draw_line(self.get_wall(Wall.BOTTOM))
+        if self.__win != None:
+            if self.has_left_wall:
+                self.__win.draw_line(self.get_wall(Wall.LEFT))
+            if self.has_right_wall:
+                self.__win.draw_line(self.get_wall(Wall.RIGHT))
+            if self.has_top_wall:
+                self.__win.draw_line(self.get_wall(Wall.TOP))
+            if self.has_bottom_wall:
+                self.__win.draw_line(self.get_wall(Wall.BOTTOM))
 
 
     def draw_move(self, to_cell, undo = False):
         color = "gray" if undo else "red"
         line = Line(self.get_center(), to_cell.get_center())
-        self.__win.draw_line(line, color)
+        if self.__win != None:
+            self.__win.draw_line(line, color)
 
 
     def get_wall(self, wall):
