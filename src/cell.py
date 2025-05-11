@@ -22,6 +22,8 @@ class Cell():
         self.has_right_wall  = True
         self.has_top_wall    = True
         self.has_bottom_wall = True
+
+        self.visited = False
         
 
     def draw(self):
@@ -56,7 +58,18 @@ class Cell():
                 b = Point(self.__x2, self.__y2)
         return Line(a, b)
 
+
     def get_center(self):
         center_x = (self.__x1 + self.__x2) / 2
         center_y = (self.__y1 + self.__y2) / 2
         return Point(center_x, center_y)
+
+
+    def get_coordinates(self):
+        return (self.__x1, self.__y1, self.__x2, self.__y2)
+
+
+    def __eq__(self, other):
+        if isinstance(other, Cell):
+            return self.get_coordinates() == other.get_coordinates()
+        return False
