@@ -23,9 +23,13 @@ class Maze():
         self.__rng = random.Random(seed)
 
         self._create_cells()
+
+        # print(self.__cells)
+
         self._break_entrance_and_exit()
         self._draw_cells()
         self._break_walls_r(0, 0)
+        self._reset_cells_visited()
 
 
     def _create_cells(self):
@@ -70,23 +74,24 @@ class Maze():
     def _get_unvisited_neighbors(self, col, row):
         neighbors = {}
 
-        if 0 <= col - 1 < len(self.__cells):
-            if not self.__cells[col - 1][row].visited:
-                neighbors[Direction.TOP] = (col - 1, row)
-
-        if 0 <= col + 1 < len(self.__cells):
-            if not self.__cells[col + 1][row].visited:
-                neighbors[Direction.BOTTOM] = (col + 1, row)
-
         if 0 <= row - 1 < len(self.__cells[col]):
             if not self.__cells[col][row - 1].visited:
-                neighbors[Direction.LEFT] = (col, row - 1)
+                neighbors[Direction.TOP] = (col, row - 1)
 
         if 0 <= row + 1 < len(self.__cells[col]):
             if not self.__cells[col][row + 1].visited:
-                neighbors[Direction.RIGHT] = (col, row + 1)
+                neighbors[Direction.BOTTOM] = (col, row + 1)
+
+        if 0 <= col - 1 < len(self.__cells):
+            if not self.__cells[col - 1][row].visited:
+                neighbors[Direction.LEFT] = (col - 1, row)
+
+        if 0 <= col + 1 < len(self.__cells):
+            if not self.__cells[col + 1][row].visited:
+                neighbors[Direction.RIGHT] = (col + 1, row)
 
         return neighbors
+
 
     def _destroy_walls(self, direction, current, neighbor):
         match direction:
@@ -104,6 +109,58 @@ class Maze():
                 self.__cells[neighbor[0]][neighbor[1]].has_left_wall = False
 
 
+    def _reset_cells_visited(self):
+        for col in self.__cells:
+            for cell in col:
+                cell.visited = False
+
+
+    def solve(self):
+        return self._solve_r(0, 0)
+
+
+    def _solve_r(self, col, row):
+        self.__cells[col][row].visited = True
+
+        # goal reached
+        if col == self.__num_cols - 1 and row == self.__num_rows - 1:
+            return True
+
+        possible_directions = self._get_unvisited_reachable_neighbors(col, row)
+        for direction, coordinates in possible_directions.items():
+            self.__cells[col][row].draw_move(self.__cells[coordinates[0]][coordinates[1]])
+            self._animate()
+            if self._solve_r(coordinates[0], coordinates[1]):
+                return True
+            else:
+                self.__cells[col][row].draw_move(self.__cells[coordinates[0]][coordinates[1]], True)
+                self._animate()
+
+        return False
+
+
+    def _get_unvisited_reachable_neighbors(self, col, row):
+        unvisited_neighbors = self._get_unvisited_neighbors(col, row)
+        return dict(filter(lambda item: self._is_reachable(item[0], (col, row), item[1]), unvisited_neighbors.items()))
+
+
+    def _is_reachable(self, direction, current, neighbor):
+        match direction:
+            case Direction.TOP:
+                return (not self.__cells[current[0]][current[1]].has_top_wall
+                    and not self.__cells[neighbor[0]][neighbor[1]].has_bottom_wall)
+            case Direction.BOTTOM:
+                return (not self.__cells[current[0]][current[1]].has_bottom_wall
+                    and not self.__cells[neighbor[0]][neighbor[1]].has_top_wall)
+            case Direction.LEFT:
+                return (not self.__cells[current[0]][current[1]].has_left_wall
+                    and not self.__cells[neighbor[0]][neighbor[1]].has_right_wall)
+            case Direction.RIGHT:
+                return (not self.__cells[current[0]][current[1]].has_right_wall
+                and not self.__cells[neighbor[0]][neighbor[1]].has_left_wall)
+        return False
+
+
     def _draw_cells(self):
         for col in self.__cells:
             for cell in col:
@@ -114,7 +171,7 @@ class Maze():
     def _animate(self):
         if self.__win != None:
             self.__win.redraw()
-            sleep(0.05)
+            sleep(0.03)
 
 
     def get_cells(self):

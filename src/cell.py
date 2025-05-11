@@ -73,3 +73,9 @@ class Cell():
         if isinstance(other, Cell):
             return self.get_coordinates() == other.get_coordinates()
         return False
+
+    def __str__(self):
+        return f"Cell(x1={round(self.__x1)} y1={round(self.__y1)}, x2={round(self.__x2)}, y2={round(self.__y2)})"
+
+    def __repr__(self):
+        return f"Cell(x1={round(self.__x1)} y1={round(self.__y1)}, x2={round(self.__x2)}, y2={round(self.__y2)})"

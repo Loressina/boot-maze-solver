@@ -1,8 +1,17 @@
 {
-	"folders":
-	[
-		{
-			"path": "."
-		}
-	]
+    "folders":
+    [
+        {
+            "path": ".",
+        }
+    ],
+    "debugger_configurations":
+    [
+        {
+            "name": "Python: main.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${project_path}/src/main.py"
+        },
+    ],
 }
