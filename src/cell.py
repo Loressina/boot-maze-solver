@@ -26,14 +26,10 @@ class Cell():
 
     def draw(self):
         if self.__win != None:
-            if self.has_left_wall:
-                self.__win.draw_line(self.get_wall(Wall.LEFT))
-            if self.has_right_wall:
-                self.__win.draw_line(self.get_wall(Wall.RIGHT))
-            if self.has_top_wall:
-                self.__win.draw_line(self.get_wall(Wall.TOP))
-            if self.has_bottom_wall:
-                self.__win.draw_line(self.get_wall(Wall.BOTTOM))
+            self.__win.draw_line(self.get_wall(Wall.LEFT),   "black" if self.has_left_wall else "white")
+            self.__win.draw_line(self.get_wall(Wall.RIGHT),  "black" if self.has_right_wall else "white")
+            self.__win.draw_line(self.get_wall(Wall.TOP),    "black" if self.has_top_wall else "white")
+            self.__win.draw_line(self.get_wall(Wall.BOTTOM), "black" if self.has_bottom_wall else "white")
 
 
     def draw_move(self, to_cell, undo = False):

@@ -12,7 +12,9 @@ class Maze():
         self.__cell_size_y = cell_size_y
         self.__win = win
         self._create_cells()
+        self._break_entrance_and_exit()
         self._draw_cells()
+
 
     def _create_cells(self):
         self.__cells = []
@@ -27,11 +29,21 @@ class Maze():
                 col_cells.append(Cell(x1, y1, x2, y2, self.__win))
             self.__cells.append(col_cells)
 
+
+    def _break_entrance_and_exit(self):
+        entrance = self.__cells[0][0]
+        entrance.has_top_wall = False
+
+        exit = self.__cells[-1][-1]
+        exit.has_bottom_wall = False
+
+
     def _draw_cells(self):
         for col in self.__cells:
             for cell in col:
                 cell.draw()
                 self._animate()
+
 
     def _animate(self):
         if self.__win != None:
